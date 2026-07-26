@@ -9,7 +9,7 @@ import com.example.moviewreviewapplication.mapper.UserMapper;
 import com.example.moviewreviewapplication.repository.UserRepository;
 import com.example.moviewreviewapplication.service.AuthService;
 import com.example.moviewreviewapplication.service.JwtService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,14 +19,16 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final JwtService jwtService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final PasswordEncoder encoder;
 
     public AuthServiceImpl(UserRepository userRepository,
                            UserMapper userMapper,
-                           JwtService jwtService) {
+                           JwtService jwtService,
+                           PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.jwtService = jwtService;
+        this.encoder = encoder;
     }
 
     @Override

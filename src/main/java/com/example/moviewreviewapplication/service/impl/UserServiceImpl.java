@@ -7,24 +7,24 @@ import com.example.moviewreviewapplication.exception.ResourceNotFoundException;
 import com.example.moviewreviewapplication.mapper.UserMapper;
 import com.example.moviewreviewapplication.repository.UserRepository;
 import com.example.moviewreviewapplication.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.encoder = encoder;
     }
 
     public Page<UserResponseDTO> getAllUsers(Integer page, Integer size, String sortBy) {

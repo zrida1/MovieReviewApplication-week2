@@ -30,4 +30,33 @@ public class JwtServiceImpl implements JwtService {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
+    @Override
+    public String extractEmail(String token) {
+
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
+
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+    @Override
+    public boolean validateToken(String token) {
+
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
+
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
