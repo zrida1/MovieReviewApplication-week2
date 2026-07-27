@@ -4,6 +4,7 @@ import com.example.moviewreviewapplication.dto.LoginRequest;
 import com.example.moviewreviewapplication.dto.LoginResponse;
 import com.example.moviewreviewapplication.dto.UserRequestDTO;
 import com.example.moviewreviewapplication.dto.UserResponseDTO;
+import com.example.moviewreviewapplication.entity.Role;
 import com.example.moviewreviewapplication.entity.User;
 import com.example.moviewreviewapplication.mapper.UserMapper;
 import com.example.moviewreviewapplication.repository.UserRepository;
@@ -37,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
         dto.setPassword(encoder.encode(dto.getPassword()));
 
         User user = userMapper.toEntity(dto);
+        user.setRole(Role.USER);
 
         return userMapper.toResponseDTO(userRepository.save(user));
     }
