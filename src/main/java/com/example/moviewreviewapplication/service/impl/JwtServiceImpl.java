@@ -53,10 +53,25 @@ public class JwtServiceImpl implements JwtService {
                     .build()
                     .parseSignedClaims(token);
 
-            return true;
+            return !isTokenExpired(token);
 
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public boolean isTokenExpired(String token) {
+
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
+
+        Date expirationDate = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+
+        return expirationDate.before(new Date());
     }
 }
