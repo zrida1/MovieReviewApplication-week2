@@ -1,5 +1,7 @@
 package com.example.moviewreviewapplication.config;
 
+import com.example.moviewreviewapplication.exception.JwtAccessDeniedHandler;
+import com.example.moviewreviewapplication.security.JwtAuthenticationEntryPoint;
 import com.example.moviewreviewapplication.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +20,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtAccessDeniedHandler accessDeniedHandler;
 
     public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
+        this.authenticationEntryPoint = new JwtAuthenticationEntryPoint();
+        this.accessDeniedHandler = new JwtAccessDeniedHandler();
     }
 
     @Bean
@@ -44,6 +50,11 @@ public class SecurityConfig {
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
 
                 .authorizeHttpRequests(auth -> auth
 
